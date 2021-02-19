@@ -115,6 +115,16 @@
 
 				methods: {
 					addMovie() {
+						if (
+							!this.movieData.name ||
+							!this.movieData.country ||
+							!this.movieData.year
+						) {
+							console.log('here');
+							this.showAlert();
+							return;
+						}
+
 						let movies = localStorage.getItem('moviesKey');
 
 						this.movieData.id = new Date().getTime();
@@ -166,6 +176,10 @@
 						localStorage.setItem('moviesKey', JSON.stringify(this.moviesList));
 
 						this.movieData = { name: '', country: '', year: '' };
+					},
+
+					showAlert() {
+						alert('Ops! Você deve preencher TODOS os campos...');
 					},
 				},
 
