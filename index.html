@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" href="favicon.png" type="image/png" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+			crossorigin="anonymous"
+		/>
+		<title>Vue - Catálogo de Filmes</title>
+	</head>
+	<body>
+		<div id="app" class="container">
+			<div class="row mt-5">
+				<div class="col-12 border-bottom mb-5">
+					<h2>{{ title }}</h2>
+				</div>
+				<div class="col-4">
+					<form action="">
+						<div class="form-group mr-1">
+							<label>Título:</label>
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Nome do Filme..."
+								v-model="movieData.name"
+							/>
+						</div>
+						<div class="form-group mr-1">
+							<label class="mt-1">País de Origem:</label>
+							<input
+								type="text"
+								class="form-control"
+								placeholder="País..."
+								v-model="movieData.country"
+							/>
+						</div>
+						<div class="form-group mr-1">
+							<label class="mt-1">Ano de Lançamento:</label>
+							<input
+								type="number"
+								class="form-control"
+								placeholder="Ano..."
+								v-model="movieData.year"
+							/>
+						</div>
+						<div class="form-group ml-1 mt-3">
+							<button
+								v-if="!isEdit"
+								class="btn btn-lg btn-rounded btn-success shadow-none"
+								@click.prevent="addMovie"
+							>
+								Add ao Catálogo
+							</button>
+							<button
+								v-if="isEdit"
+								class="btn btn-lg btn-rounded btn-primary shadow-none"
+								@click.prevent="updateMovie(movieData)"
+							>
+								Atualizar Catálogo
+							</button>
+						</div>
+					</form>
+				</div>
+
+				<div class="col-8 border border-top-0 border-bottom-0 border-right-0">
+					<div class="contact">
+						<div class="col-12 mb-2" v-for="movie in moviesList">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">{{movie.name}}</h5>
+									<p class="card-text">
+										<b>País de Origem:</b> {{movie.country}} |
+										<b>Ano:</b> {{movie.year}}
+									</p>
+									<button
+										class="btn btn-small btn-primary shadow-none"
+										@click.prevent="editMovie(movie)"
+									>
+										EDITAR
+									</button>
+									<button
+										class="btn btn-small btn-danger shadow-none"
+										@click.prevent="deleteMovie(movie.id)"
+									>
+										DELETAR
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<script>
+			let app = new Vue({
+				el: '#app',
+
+				data: {
+					title: 'Catálogo de Filmes',
+					movieData: {
+						id: '',
+						name: '',
+						country: '',
+						year: '',
+					},
+					isEdit: false,
+					moviesList: [],
+				},
+
+				methods: {
+					addMovie() {
+						let movies = localStorage.getItem('moviesKey');
+
+						this.movieData.id = new Date().getTime();
+
+						if (movies) {
+							movies = JSON.parse(movies);
+							movies.push(this.movieData);
+						} else {
+							movies = [this.movieData];
+						}
+
+						this.moviesList = movies;
+						localStorage.setItem('moviesKey', JSON.stringify(movies));
+
+						this.movieData = { name: '', country: '', year: '' };
+					},
+
+					deleteMovie(movieId) {
+						let movies = localStorage.getItem('moviesKey');
+
+						if (!movies) return;
+
+						movies = JSON.parse(movies);
+
+						movies = movies.filter((movie) => {
+							return movie.id != movieId;
+						});
+
+						this.moviesList = movies;
+						localStorage.setItem('moviesKey', JSON.stringify(movies));
+					},
+
+					editMovie(movie) {
+						this.movieData = movie;
+						this.isEdit = true;
+					},
+
+					updateMovie(movie) {
+						let movies = this.moviesList.map((m) => {
+							if (m.id === movie.id) {
+								return movie;
+							}
+							return m;
+						});
+
+						this.moviesList = movies;
+						this.isEdit = false;
+
+						localStorage.setItem('moviesKey', JSON.stringify(this.moviesList));
+
+						this.movieData = { name: '', country: '', year: '' };
+					},
+				},
+
+				created() {
+					this.moviesList = JSON.parse(localStorage.getItem('moviesKey'));
+				},
+			});
+		</script>
+	</body>
+</html>
