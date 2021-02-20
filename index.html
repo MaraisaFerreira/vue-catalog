@@ -11,6 +11,10 @@
 			integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
 			crossorigin="anonymous"
 		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css"
+		/>
 		<title>Vue - Catálogo de Filmes</title>
 	</head>
 	<body>
@@ -69,7 +73,7 @@
 				</div>
 
 				<div class="col-8 border border-top-0 border-bottom-0 border-right-0">
-					<div class="contact">
+					<div class="contact" v-if="moviesList.length">
 						<div class="col-12 mb-2" v-for="movie in moviesList">
 							<div class="card">
 								<div class="card-body">
@@ -92,6 +96,17 @@
 									</button>
 								</div>
 							</div>
+						</div>
+					</div>
+					<div v-else>
+						<div
+							class="card d-flex align-items-center justify-content-center p-4"
+						>
+							<h3>Nenhum filme ou série adicionado ainda!</h3>
+							<h5 class="text-muted">
+								Adicione um <i class="bi bi-emoji-wink"></i></i>
+							</h5>
+							
 						</div>
 					</div>
 				</div>
