@@ -16,8 +16,9 @@
 	<body>
 		<div id="app" class="container">
 			<div class="row mt-5">
-				<div class="col-12 border-bottom mb-5">
+				<div class="col-12 border-bottom mb-5 d-flex justify-content-between">
 					<h2>{{ title }}</h2>
+					<p class="align-self-center m-0 p-0">{{ counter }}</p>
 				</div>
 				<div class="col-4">
 					<form action="">
@@ -111,6 +112,12 @@
 					},
 					isEdit: false,
 					moviesList: [],
+				},
+
+				computed: {
+					counter() {
+						return `Total de filmes no catálogo: ${this.moviesList.length}`;
+					},
 				},
 
 				methods: {
